@@ -1,0 +1,82 @@
+#Jonathan Orozco ID: 66888405 LAB 3
+#Class file
+import Mapquest_url
+
+
+mq_server=Mapquest_url
+
+class Generate_directions:
+    def generate(self,x:str)->str:
+        '''
+        Prints the directions from the json 
+        '''
+        print()
+        print('DIRECTIONS: ')
+        for routes in x['route']['legs']:
+            for maneuvers in routes['maneuvers']:
+                print(maneuvers['narrative'])
+        print()
+
+class Generate_time:          
+    def generate(self,x:str)->str:
+        '''
+        Prints the total time of travel
+        '''
+        time=0
+        
+        try:
+            for routes in x['route']['legs']:
+                for maneuvers in routes['maneuvers']:
+                    time+=(maneuvers['time'])
+            print('Total time for travel: ' + str(int(time/60))+" " +"minutes")
+            print()
+        except:
+            print("Invalid address!")
+            pass
+       
+        
+class Generate_distance:
+    def generate(self,x:str)->str:
+        '''
+        Prints the total distance of travel
+        '''
+        try:
+            for routes in x['route']['legs']:
+                print('Distance: '+str(int(round(routes['distance'],0)))+" miles")
+            print()
+        except:
+            print("Invalid address!")
+            pass
+        
+        
+class Generate_lat_long:        
+    def generate(self,x:str)->str:
+        '''
+        Extracts the latitude and longitude and
+        prints the lattitude and longitude of route
+        in proper format
+        '''
+        lat_long=[]
+        final_lat_long=[]
+        try:
+            
+            for routes in x['route']['locations']:
+                lat_long.append(routes["latLng"])
+
+            for latLong in lat_long:
+                if latLong["lng"] <0 and latLong["lat"]>0:
+                    final_lat_long.append(str(abs(round(latLong["lat"],2)))+"N"+" "+str(abs(round(latLong["lng"],2)))+"W")
+                elif latLong["lng"] <0 and latLong["lat"]<0:
+                    final_lat_long.append(str(abs(round(latLong["lat"],2)))+"S"+" "+str(abs(round(latLong["lng"],2)))+"W")
+                elif latLong["lng"] >0 and latLong["lat"]>0:
+                    final_lat_long.append(str(abs(round(latLong["lat"],2)))+"N"+" "+str(abs(round(latLong["lng"],2)))+"E")
+                elif latLong["lng"] >0 and latLong["lat"]<0:
+                    final_lat_long.append(str(abs(round(latLong["lat"],2)))+"S"+" "+str(abs(round(latLong["lng"],2)))+"E")
+            for latilongi in final_lat_long:
+                print(latilongi)
+        except:
+            pass
+        print()
+       
+     
+
