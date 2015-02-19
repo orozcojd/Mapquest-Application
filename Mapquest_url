@@ -1,0 +1,45 @@
+#Jonathan Orozco ID: 66888405 LAB 3
+#API AND URL BUILDING MODULE
+import urllib.request
+import urllib.parse
+import urllib.error
+import json
+import urllib.parse
+
+NEWAPIKEY='Fmjtd%7Cluu821u7n1%2Ca0%3Do5-942wua'
+
+
+def url_parse(city_list:list)->str:
+    '''
+    Parses the JSON response and returns a string containing the encoded characters
+    '''
+    urlString='&'
+    
+    for city in city_list[1:]:
+        urlString+=urllib.parse.urlencode([('to',city)])+'&'
+        new_url=urlString[0:-1]
+  
+
+    first_url=urllib.parse.urlencode([('from',city_list[0])])
+    return(first_url+new_url)
+        
+
+def url_build(end_url:str)->str:
+    '''
+    Builds the url and returns it as a string
+    '''
+    return('http://open.mapquestapi.com/directions/v2/route?key='+NEWAPIKEY+'&'+end_url)
+
+
+def open_link(link:str)->'Json object':
+    '''
+    reads data based on built url and prints in json
+    '''
+    
+    response=urllib.request.urlopen(link)
+    data=response.read()
+    string_data=data.decode(encoding='utf-8')
+    json_object=json.loads(string_data)
+    return json_object
+    
+
