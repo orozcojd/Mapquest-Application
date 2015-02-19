@@ -1,0 +1,135 @@
+#Jonathan Orozco ID: 66888405 LAB 3
+#MAINFILE
+import Mapquest_class
+import Mapquest_url
+
+
+mq_classes=Mapquest_class
+mq_server=Mapquest_url
+
+
+def user_interface():
+        '''
+        This is the userinterface for the mapquest app. It calls all the functions
+        to run the program, creating the link, building the city list, number of outputs
+        and prints the output by calling all the functions here.
+        '''
+        try:
+                LINK=mq_server.open_link(mq_server.url_build(mq_server.url_parse(_cities(_number_locations()))))
+                OUTPUTS=func_steps(_specific_outputs(_output_number()))
+                
+                action(LINK,OUTPUTS)
+        except:
+                print("Sorry! Invalid input.")
+                print()
+                pass
+                
+def _number_locations()->int:
+    '''
+    Takes in location input from users
+    '''
+    
+    while True:
+        try:
+            locations = int(input())
+            if locations >=2:
+                break
+            else:
+                print("Oops! Must pick an integer value larger than 2..")
+                print()
+        except ValueError:
+            print("Oops! That was not a valid number. Try Again..")
+    return locations
+
+def _cities(locations:int)->list:
+    '''
+    Asks user for location input based on number requested
+    '''
+    cities=[]
+    for i in range(locations):
+        while True:
+            addresses=input()
+            try:
+                if len(addresses)<2:
+                    print("Not a proper address. Try again")
+                    print()
+                    
+                else:
+                    cities.append(addresses)
+                break
+            except:
+                print('Oops! That was not a valid input. Try Again..')
+                print()
+                
+    return cities
+
+def _output_number()->int:
+    '''
+    Takes in number of outputs from user
+    '''
+    while True:
+        
+        try:
+            user=int(input())
+            break
+        except ValueError:
+             print("Oops! That was not a valid number. Try Again..")
+             print()
+    return user
+
+def _specific_outputs(output_num:int)->list:
+    '''
+    Asks user for specific number of outputs
+    '''
+    outputs=[]
+    suggested=['STEPS','LATLONG',
+               'TOTALDISTANCE','TOTALTIME']
+    for i in range(0,output_num):
+        while True:
+            answer=input()
+            if len(answer)== 0 or answer not in suggested:
+                print("Sorry! Invalid input")
+            else:
+                outputs.append(answer)
+                break
+    return outputs
+
+def func_steps(func:list):
+    '''
+    Takes as input a list of steps and returns a list
+    of functins to calculate the steps
+    '''
+    function_list=[]
+    for function in func:
+        if function == 'STEPS':
+            function_list.append(mq_classes.Generate_directions())
+        elif function== 'TOTALDISTANCE':
+            function_list.append(mq_classes.Generate_distance())
+        elif function=='TOTALTIME':
+            function_list.append(mq_classes.Generate_time())
+        elif function=='LATLONG':
+            function_list.append(mq_classes.Generate_lat_long())
+    return function_list
+        
+def action(json_data,objects:['object calculations']):
+    '''
+    Takes as input function calculations and json data and
+    returns all the calculations based on the input functions
+    '''
+
+    current_value=json_data
+    total_routes=[]
+    for objec in objects:
+        total_routes.append(objec.generate(current_value))
+    return total_routes
+
+def _mapquest_courtesy():
+    '''Prints the courtesy line for mapquest'''
+    
+    print('Directions Courtesy of MapQuest; Map Data Copyright OpenStreetMap Contributors')
+
+
+if __name__=='__main__':
+        
+    user_interface()
+    _mapquest_courtesy()
